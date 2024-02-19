@@ -1,23 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import Header from "./Components/Header";
+import { useTheme } from "./Components/UI/ThemeContex";
+import { Routes, Route } from "react-router-dom";
+import Home from "./Pages/Home";
+import Authenticate from "./Pages/Authenticate";
 
 function App() {
+  const { isDarkMode } = useTheme();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      className={`h-screen font-nunito transition-colors duration-500 ${
+        isDarkMode ? "bg-primary text-smoke" : "bg-smoke"
+      }`}
+    >
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+
+        <Route path="/authenticate" element={<Authenticate />} />
+      </Routes>
     </div>
   );
 }
