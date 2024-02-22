@@ -1,12 +1,20 @@
 import React, { useState } from "react";
-import Input from "../UI/Input";
+import Input from "../../Components/UI/Input";
 import { MdLocalPhone, MdOutlineEmail } from "react-icons/md";
-import { useTheme } from "../UI/ThemeContex";
-import Card from "../UI/Card";
-import Button from "../UI/Button";
+import { useTheme } from "../../Components/UI/ThemeContex";
+import Card from "../../Components/UI/Card";
+import Button from "../../Components/UI/Button";
+import { sendOtp } from "../../http/index";
+import { useDispatch } from "react-redux";
+import { setOtp } from "../../store/authSlice";
+import { useNavigate } from "react-router-dom/dist";
 
-const StepPhoneEmail = () => {
+const StepPhoneEmail = ({ onNext }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [activeInput, setActiveInput] = useState("phone");
+  const [error, setError] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const { isDarkMode } = useTheme();
@@ -19,20 +27,30 @@ const StepPhoneEmail = () => {
     setActiveInput("email");
   };
 
-  const formatPhoneNumber = (value) => {
-    const numericValue = value.replace(/\D/g, "");
-
-    return numericValue.replace(/(\d{5})(\d{5})/, "$1 $2");
-  };
-
   const handlePhoneChange = (e) => {
-    const formattedValue = formatPhoneNumber(e.target.value);
-    setPhone(formattedValue);
+    setPhone(e.target.value);
   };
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
-  console.log(email);
+  const handleSubmit = async () => {
+    try {
+      if (activeInput === "phone" && !phone) {
+        setError("Please enter your phone number.");
+        return;
+      }
+      if (activeInput === "email" && !email) {
+        setError("Please enter your phone number.");
+        return;
+      }
+      const { data } = await sendOtp({ phone });
+      console.log(data);
+      dispatch(setOtp({ phone: data?.data?.phone, hash: data?.data?.hash }));
+      onNext();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const Title = (
     <>
@@ -75,6 +93,7 @@ const StepPhoneEmail = () => {
           }`}
         />
       </div>
+
       <Card className="w-full" title={Title}>
         {activeInput === "phone" && (
           <Input
@@ -98,8 +117,15 @@ const StepPhoneEmail = () => {
             onChange={handleEmailChange}
           />
         )}
+        <p
+          className={`${
+            isDarkMode ? "text-grayLight" : "text-grayDarker"
+          } text-xs mt-2`}
+        >
+          {error}
+        </p>
+        <Button text="Next" onClick={handleSubmit} />
 
-        <Button text="Next" />
         <p
           className={`${
             isDarkMode ? "text-grayLight" : "text-grayDarker"

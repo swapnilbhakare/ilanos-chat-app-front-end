@@ -3,7 +3,7 @@ const ThemeContext = createContext();
 
 export const useTheme = () => useContext(ThemeContext);
 
-export const ThemProvider = ({ children }) => {
+export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   const toggleTheme = () => {

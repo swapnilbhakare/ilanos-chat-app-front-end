@@ -1,0 +1,57 @@
+import React, { useState } from "react";
+import Card from "../../Components/UI/Card";
+import Button from "../../Components/UI/Button";
+
+import Input from "../../Components/UI/Input";
+
+import { useTheme } from "../../Components/UI/ThemeContex";
+import { useDispatch, useSelector } from "react-redux";
+import { selectActivate, setName } from "../../store/activateSlice";
+const StepName = ({ onNext }) => {
+  const dispatch = useDispatch();
+  const activate = useSelector(selectActivate);
+  const [error, setError] = useState("");
+
+  const { name } = activate;
+
+  const [fullName, setFullName] = useState(name || "");
+  const { isDarkMode } = useTheme();
+
+  const handlefullNameChange = (e) => {
+    setFullName(e.target.value);
+  };
+  const handleSubmit = () => {
+    try {
+      if (!fullName) {
+        setError("Please Enter Your Name");
+        return;
+      }
+      dispatch(setName(fullName));
+      onNext();
+    } catch (error) {}
+  };
+  return (
+    <Card title="What’s your full name?">
+      <Input
+        type="text"
+        placeholder="Your Name"
+        classes={`${
+          isDarkMode ? "bg-primary text-smoke" : "bg-smoke text-primary"
+        }`}
+        value={fullName}
+        onChange={handlefullNameChange}
+      />
+      <p
+        className={`${
+          isDarkMode ? "text-grayLight" : "text-grayDarker"
+        } text-xs mt-2`}
+      >
+        {error ? error : "We encourage you to use real names :)"}
+      </p>
+
+      <Button text="Next" onClick={handleSubmit} />
+    </Card>
+  );
+};
+
+export default StepName;
