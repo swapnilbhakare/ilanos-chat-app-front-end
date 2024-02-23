@@ -7,14 +7,14 @@ import Input from "../../Components/UI/Input";
 import { useTheme } from "../../Components/UI/ThemeContex";
 import { useDispatch, useSelector } from "react-redux";
 import { selectActivate, setName } from "../../store/activateSlice";
+import { selectAuth } from "../../store/authSlice";
 const StepName = ({ onNext }) => {
   const dispatch = useDispatch();
   const activate = useSelector(selectActivate);
+  const { user } = useSelector(selectAuth);
   const [error, setError] = useState("");
 
-  const { name } = activate;
-
-  const [fullName, setFullName] = useState(name || "");
+  const [fullName, setFullName] = useState(user.fullName || activate.fullName);
   const { isDarkMode } = useTheme();
 
   const handlefullNameChange = (e) => {

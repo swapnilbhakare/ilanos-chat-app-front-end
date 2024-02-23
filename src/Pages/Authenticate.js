@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import StepPhoneEmail from "./AuthSteps/StepPhoneEmail";
+import StepPhone from "./AuthSteps/StepPhone";
 import StepOtp from "./AuthSteps/StepOtp";
 import { useNavigate } from "react-router-dom";
 
 const steps = {
-  1: StepPhoneEmail,
+  1: StepPhone,
   2: StepOtp,
 };
 

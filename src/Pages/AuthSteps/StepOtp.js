@@ -47,33 +47,31 @@ const StepOtp = () => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <Card title={Title}>
-        <div className="flex justify-center items-center space-x-2">
-          {otp.map((digit, index) => (
-            <Input
-              key={index}
-              type="text"
-              maxLength={1}
-              placeholder="0"
-              classes={`text-center ${
-                isDarkMode ? "bg-primary text-smoke" : "bg-smoke text-primary"
-              }`}
-              value={digit}
-              onChange={(e) => handleChange(index, e.target.value)}
-            />
-          ))}
-        </div>
-        <p
-          className={`${
-            isDarkMode ? "text-grayLight" : "text-grayDarker"
-          } text-md mt-2`}
-        >
-          Didn’t receive? <span className="text-blue">Tap to resend</span>
-        </p>
-        <Button text="Next" onClick={handleSubmit} />
-      </Card>
-    </div>
+    <Card title={Title}>
+      <div className="flex justify-center items-center space-x-2">
+        {otp.map((digit, index) => (
+          <Input
+            key={index}
+            type="text"
+            maxLength={1}
+            placeholder="0"
+            classes={`text-center ${
+              isDarkMode ? "bg-primary text-smoke" : "bg-smoke text-primary"
+            }`}
+            value={digit}
+            onChange={(e) => handleChange(index, e.target.value)}
+          />
+        ))}
+      </div>
+      <p
+        className={`${
+          isDarkMode ? "text-grayLight" : "text-grayDarker"
+        } text-md mt-2`}
+      >
+        Didn’t receive? <span className="text-blue">Tap to resend</span>
+      </p>
+      <Button text="Next" onClick={handleSubmit} />
+    </Card>
   );
 };
 

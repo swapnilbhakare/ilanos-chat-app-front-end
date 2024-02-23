@@ -7,19 +7,19 @@ import { useNavigate } from "react-router-dom/dist";
 import { setAvatar } from "../../store/activateSlice";
 import { activate } from "../../http";
 import { setAuth } from "../../store/authSlice";
+import { selectAuth } from "../../store/authSlice";
 const StepAvatar = () => {
   const dispatch = useDispatch();
   const { fullName, avatar } = useSelector(selectActivate);
-
+  const { user } = useSelector(selectAuth);
   const navigate = useNavigate();
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState("" || user.avatar);
 
   const handleSubmit = async () => {
     try {
       const { data } = await activate({ fullName, avatar });
       const userData = data?.data;
 
-      console.log(userData);
       if (userData.auth) {
         dispatch(setAuth(userData));
         navigate("/chatroom");
