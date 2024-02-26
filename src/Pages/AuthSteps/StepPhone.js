@@ -10,7 +10,6 @@ import { setOtp } from "../../store/authSlice";
 
 const StepPhone = ({ onNext }) => {
   const dispatch = useDispatch();
-
   const [error, setError] = useState("");
   const [phone, setPhone] = useState("");
   const { isDarkMode } = useTheme();
@@ -36,34 +35,36 @@ const StepPhone = ({ onNext }) => {
   };
 
   return (
-    <Card className="w-full" title="Enter your phone number">
-      <Input
-        type="text"
-        placeholder="+91 70300 01343"
-        classes={`${
-          isDarkMode ? "bg-primary text-smoke" : "bg-smoke text-primary"
-        }`}
-        value={phone}
-        onChange={handlePhoneChange}
-      />
-      <p
-        className={`${
-          isDarkMode ? "text-grayLight" : "text-grayDarker"
-        } text-xs mt-2`}
-      >
-        {error}
-      </p>
-      <Button text="Next" onClick={handleSubmit} />
+    <>
+      <Card title="Enter your phone number">
+        <Input
+          type="text"
+          placeholder="+91 70300 01343"
+          className={`${
+            isDarkMode ? "bg-primary text-smoke" : "bg-smoke text-primary"
+          }`}
+          value={phone}
+          onChange={handlePhoneChange}
+        />
+        <p
+          className={`${
+            isDarkMode ? "text-grayLight" : "text-grayDarker"
+          } text-xs my-1`}
+        >
+          {error}
+        </p>
+        <Button text="Next" onClick={handleSubmit} />
 
-      <p
-        className={`${
-          isDarkMode ? "text-grayLight" : "text-grayDarker"
-        } text-xs mt-2`}
-      >
-        By entering your number, you’re agreeing to our Terms of Service and
-        Privacy Policy. Thanks!
-      </p>
-    </Card>
+        <p
+          className={`${
+            isDarkMode ? "text-grayLight" : "text-grayDarker"
+          } text-xs mt-1`}
+        >
+          By entering your number, you’re agreeing to our Terms of Service and
+          Privacy Policy. Thanks!
+        </p>
+      </Card>
+    </>
   );
 };
 

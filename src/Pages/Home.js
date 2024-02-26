@@ -15,7 +15,7 @@ const Home = () => {
   return (
     <Card
       title="👋 Welcome to ilanoS! 🤩"
-      className={`w-full mb-4 ${
+      className={`mb-4 ${
         isDarkMode ? "bg-secondary text-smoke" : "bg-white text-grayLight"
       }`}
     >
@@ -28,7 +28,9 @@ const Home = () => {
         discover new possibilities!
       </p>
       <div className="flex justify-center mt-4">
-        <Button onClick={startRegister} text="Let's Get Started" />
+        <Button onClick={startRegister} text="Next">
+          Let's Get Started
+        </Button>
       </div>
       <p className="text-center mt-2 text-blue-500">
         Have an invite text? Sign in

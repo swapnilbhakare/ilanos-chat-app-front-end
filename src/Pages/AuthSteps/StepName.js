@@ -8,7 +8,7 @@ import { useTheme } from "../../Components/UI/ThemeContex";
 import { useDispatch, useSelector } from "react-redux";
 import { selectActivate, setName } from "../../store/activateSlice";
 import { selectAuth } from "../../store/authSlice";
-const StepName = ({ onNext }) => {
+const StepName = ({ onNext, onBack }) => {
   const dispatch = useDispatch();
   const activate = useSelector(selectActivate);
   const { user } = useSelector(selectAuth);
@@ -27,30 +27,37 @@ const StepName = ({ onNext }) => {
         return;
       }
       dispatch(setName(fullName));
+
       onNext();
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
-    <Card title="What’s your full name?">
-      <Input
-        type="text"
-        placeholder="Your Name"
-        classes={`${
-          isDarkMode ? "bg-primary text-smoke" : "bg-smoke text-primary"
-        }`}
-        value={fullName}
-        onChange={handlefullNameChange}
-      />
-      <p
-        className={`${
-          isDarkMode ? "text-grayLight" : "text-grayDarker"
-        } text-xs mt-2`}
-      >
-        {error ? error : "We encourage you to use real names :)"}
-      </p>
+    <>
+      <Button text="Back" onClick={onBack} />
 
-      <Button text="Next" onClick={handleSubmit} />
-    </Card>
+      <Card title="What’s your full name?" className="my-6">
+        <Input
+          type="text"
+          placeholder="Your Name"
+          className={`${
+            isDarkMode ? "bg-primary text-smoke" : "bg-smoke text-primary"
+          }`}
+          value={fullName}
+          onChange={handlefullNameChange}
+        />
+        <p
+          className={`${
+            isDarkMode ? "text-grayLight" : "text-grayDarker"
+          } text-xs mt-2`}
+        >
+          {error ? error : "We encourage you to use real names :)"}
+        </p>
+
+        <Button text="Next" onClick={handleSubmit} />
+      </Card>
+    </>
   );
 };
 

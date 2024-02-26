@@ -1,20 +1,23 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { useTheme } from "./Components/UI/ThemeContex";
 import Header from "./Components/Header";
-import { createBrowserRouter, Outlet } from "react-router-dom";
-import Authenticate from "./Pages/Authenticate.js";
-import ChatRoom from "./Pages/ChatRoom.js";
-import Activate from "./Pages/Activate";
-import { selectAuth } from "./store/authSlice";
+import { createBrowserRouter, Outlet, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { selectAuth } from "./store/authSlice";
+import { useLoadingWithRefresh } from "./utils/useLoadingWithRefresh";
+import Loader from "./Components/UI/Loader";
+import Profile from "./Pages/Profile";
 
-import Home from "./Pages/Home";
-import { useLoadingWithRefresh } from "./utils/useLoadingWithRefresh.js";
+const Home = lazy(() => import("./Pages/Home"));
+const Authenticate = lazy(() => import("./Pages/Authenticate"));
+const Activate = lazy(() => import("./Pages/Activate"));
+const ChatRoom = lazy(() => import("./Pages/ChatRoom/ChatRoom"));
 
 export const App = () => {
   const { user } = useSelector(selectAuth);
   const { isDarkMode } = useTheme();
   const { loading } = useLoadingWithRefresh();
+
   return (
     <div
       className={`h-screen font-nunito transition-colors duration-500 ${
@@ -22,11 +25,13 @@ export const App = () => {
       }`}
     >
       {loading ? (
-        "Loading "
+        <Loader message="Loading Please wait" />
       ) : (
         <>
           <Header user={user} />
-          <Outlet />
+          <Suspense fallback={<Loader message="Loading..." />}>
+            <Outlet />
+          </Suspense>
         </>
       )}
     </div>
@@ -34,18 +39,21 @@ export const App = () => {
 };
 
 const ActivateRoute = () => {
-  const auth = useSelector(selectAuth);
-  console.log(auth);
-  const { isAuth, user } = auth;
-  console.log(user);
-  return isAuth && <Activate />;
+  const { isAuth } = useSelector(selectAuth);
+
+  return isAuth ? <Activate /> : null;
 };
+
 const ProtectedRoute = () => {
-  const auth = useSelector(selectAuth);
+  const { isAuth, user } = useSelector(selectAuth);
 
-  const { isAuth, user } = auth;
-
-  return isAuth && user.activated && <ChatRoom />;
+  if (!isAuth) {
+    return <Navigate to="/" />;
+  } else if (isAuth && user && user.activated) {
+    return <ChatRoom />;
+  } else {
+    return <Navigate to="/activate" />;
+  }
 };
 
 const routes = [
@@ -53,22 +61,11 @@ const routes = [
     path: "/",
     element: <App />,
     children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
-      {
-        path: "/authenticate",
-        element: <Authenticate />,
-      },
-      {
-        path: "/activate",
-        element: <ActivateRoute />,
-      },
-      {
-        path: "/chatroom",
-        element: <ProtectedRoute />,
-      },
+      { path: "/", element: <Home /> },
+      { path: "/authenticate", element: <Authenticate /> },
+      { path: "/activate", element: <ActivateRoute /> },
+      { path: "/chatroom", element: <ProtectedRoute /> },
+      { path: "/profile", element: <Profile /> },
     ],
   },
 ];
