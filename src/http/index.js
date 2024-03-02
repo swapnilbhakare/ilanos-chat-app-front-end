@@ -14,7 +14,7 @@ export const sendOtp = (data) => api.post("users/send-otp", data);
 export const verifyOtp = (data) => api.post("users/verify-otp", data);
 export const activate = (data) => api.post("users/activate", data);
 export const logout = () => api.post("users/logout");
-
+export const searchUser = (data) => api.post("users/search-by-phone", data);
 let isRefreshing = false;
 let failedRequestsQueue = [];
 

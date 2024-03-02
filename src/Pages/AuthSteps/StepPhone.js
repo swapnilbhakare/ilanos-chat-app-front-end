@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Input from "../../Components/UI/Input";
-
 import { useTheme } from "../../Components/UI/ThemeContex";
 import Card from "../../Components/UI/Card";
 import Button from "../../Components/UI/Button";
@@ -16,6 +15,7 @@ const StepPhone = ({ onNext }) => {
 
   const handlePhoneChange = (e) => {
     setPhone(e.target.value);
+    setError(""); // Clear error message when phone number changes
   };
 
   const handleSubmit = async () => {
@@ -35,12 +35,17 @@ const StepPhone = ({ onNext }) => {
   };
 
   return (
-    <>
-      <Card title="Enter your phone number">
+    <div className="flex flex-col items-center justify-center md:justify-start sm:justify-start  h-full">
+      <Card
+        title="Enter your phone number"
+        className={`w-full max-w-md px-14 ${
+          isDarkMode ? "bg-secondary text-smoke" : "bg-white text-grayLight"
+        }`}
+      >
         <Input
           type="text"
           placeholder="+91 70300 01343"
-          className={`${
+          className={` ${
             isDarkMode ? "bg-primary text-smoke" : "bg-smoke text-primary"
           }`}
           value={phone}
@@ -49,22 +54,21 @@ const StepPhone = ({ onNext }) => {
         <p
           className={`${
             isDarkMode ? "text-grayLight" : "text-grayDarker"
-          } text-xs my-1`}
+          } text-xs my-5 m-auto`}
         >
           {error}
         </p>
-        <Button text="Next" onClick={handleSubmit} />
-
+        <Button text="Next" className="m-auto mt-8" onClick={handleSubmit} />
         <p
           className={`${
             isDarkMode ? "text-grayLight" : "text-grayDarker"
-          } text-xs mt-1`}
+          } text-xs mt-6`}
         >
           By entering your number, you’re agreeing to our Terms of Service and
           Privacy Policy. Thanks!
         </p>
       </Card>
-    </>
+    </div>
   );
 };
 

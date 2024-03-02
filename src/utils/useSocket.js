@@ -1,41 +1,47 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { io } from "socket.io-client";
-
 import { socket_url } from "./constant";
+
+const socket = io(socket_url, {
+  withCredentials: true,
+});
+
 const useSocket = () => {
-  const [socket, setSocket] = useState(null);
-  const [isConnected, setIsConnected] = useState(false);
-  console.log(socket_url);
+  const [isConnected, setIsConnected] = useState(socket.connected);
+
   useEffect(() => {
-    const newSocket = io(socket_url, {
-      transports: ["websocket"],
-      withCredentials: true,
-    });
-
-    newSocket.on("connect", () => {
-      console.log(newSocket.id);
-      setSocket(newSocket);
+    const handleConnect = () => {
+      console.log("Socket connected:", socket.id);
       setIsConnected(true);
-    });
+    };
 
-    newSocket.on("disconnect", () => {
-      console.log(newSocket.id);
+    const handleDisconnect = () => {
+      console.log("Socket disconnected:", socket.id);
       setIsConnected(false);
-    });
+    };
 
-    newSocket.on("connect_error", (error) => {
+    const handleError = (error) => {
       console.error("Socket connection error:", error);
       setIsConnected(false);
-    });
+    };
+
+    socket.on("connect", handleConnect);
+    socket.on("disconnect", handleDisconnect);
+    socket.on("connect_error", handleError);
+
+    socket.emit("join-room");
 
     return () => {
-      if (newSocket) {
-        newSocket.close();
-      }
+      socket.off("connect", handleConnect);
+      socket.off("disconnect", handleDisconnect);
+      socket.off("connect_error", handleError);
     };
   }, []);
 
-  return { socket, isConnected };
+  return {
+    socket,
+    isConnected,
+  };
 };
 
 export default useSocket;

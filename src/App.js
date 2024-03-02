@@ -1,39 +1,52 @@
 import React, { Suspense, lazy } from "react";
 import { useTheme } from "./Components/UI/ThemeContex";
-import Header from "./Components/Header";
-import { createBrowserRouter, Outlet, Navigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Outlet,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectAuth } from "./store/authSlice";
-import { useLoadingWithRefresh } from "./utils/useLoadingWithRefresh";
-import Loader from "./Components/UI/Loader";
 import Profile from "./Pages/Profile";
+import Header from "./Components/Header";
 
+import Loader from "./Components/UI/Loader";
+
+import { useLoadingWithRefresh } from "./utils/useLoadingWithRefresh";
 const Home = lazy(() => import("./Pages/Home"));
 const Authenticate = lazy(() => import("./Pages/Authenticate"));
 const Activate = lazy(() => import("./Pages/Activate"));
 const ChatRoom = lazy(() => import("./Pages/ChatRoom/ChatRoom"));
 
 export const App = () => {
-  const { user } = useSelector(selectAuth);
   const { isDarkMode } = useTheme();
+
   const { loading } = useLoadingWithRefresh();
 
+  const location = useLocation();
   return (
     <div
-      className={`h-screen font-nunito transition-colors duration-500 ${
+      className={`h-screen max-h-screen font-nunito ${
         isDarkMode ? "bg-primary text-smoke" : "bg-smoke"
       }`}
+      style={{ backgroundColor: isDarkMode ? "#121212" : "#FFFFFF" }}
     >
-      {loading ? (
-        <Loader message="Loading Please wait" />
-      ) : (
-        <>
-          <Header user={user} />
-          <Suspense fallback={<Loader message="Loading..." />}>
-            <Outlet />
-          </Suspense>
-        </>
-      )}
+      {location.pathname !== "/chatroom" && <Header />}
+
+      <>
+        {loading ? (
+          <Loader message="Loading Please wait" />
+        ) : (
+          <>
+            <Suspense fallback={<Loader message="Loading..." />}>
+              <Outlet />
+            </Suspense>
+          </>
+        )}
+      </>
     </div>
   );
 };

@@ -10,23 +10,23 @@ import { setAuth } from "../../store/authSlice";
 import { selectAuth } from "../../store/authSlice";
 import Loader from "../../Components/UI/Loader";
 import { useTheme } from "../../Components/UI/ThemeContex";
+
 const StepAvatar = ({ onNext, onBack }) => {
   const dispatch = useDispatch();
-  const [loading, SetLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { fullName, avatar } = useSelector(selectActivate);
   const { user } = useSelector(selectAuth);
   const navigate = useNavigate();
-  const [image, setImage] = useState(
-    "/images/avatar-default.jpeg" || user.avatar
-  );
+  const [image, setImage] = useState(user.avatar);
   const { isDarkMode } = useTheme();
   const [error, setError] = useState("");
+
   const handleSubmit = async () => {
     if (!avatar) {
-      setError("Please upload Profile picture");
+      setError("Please upload a profile picture");
       return;
     }
-    SetLoading(true);
+    setLoading(true);
     try {
       const { data } = await activate({ fullName, avatar });
       const userData = data?.data;
@@ -39,7 +39,7 @@ const StepAvatar = ({ onNext, onBack }) => {
     } catch (error) {
       console.log(error);
     } finally {
-      SetLoading(false);
+      setLoading(false);
     }
   };
 
@@ -55,30 +55,38 @@ const StepAvatar = ({ onNext, onBack }) => {
   };
 
   if (loading) return <Loader message="Activation in Progress" />;
+
   return (
     <>
-      <Button text="Back" onClick={onBack} />
-      <Card title={`Ok, ${fullName} !`} className="my-6">
-        <p className="text-xs">Please upload your picture.</p>
-        <img
-          className="w-20 h-20 rounded-full border-4 border-blue bg-primary object-cover "
-          src={image}
-          alt={fullName}
-        />
-        <p
-          className={`${
-            isDarkMode ? "text-grayLight" : "text-grayDarker"
-          } text-xs `}
+      <div className="flex flex-col items-center justify-center h-full md:justify-start sm:justify-start">
+        <Card
+          title={`Ok, ${fullName} !`}
+          className="my-8 md:my-32 w-full max-w-md"
         >
-          {error}
-        </p>
-        <label className={` text-blue text-xs mt-2`}>
-          Choose a different photo
-          <input type="file" className="hidden" onChange={handleChangeAvatar} />
-        </label>
-
-        <Button text="Next" onClick={handleSubmit} />
-      </Card>
+          <p className="text-xs">Please upload your picture.</p>
+          <img
+            className="w-20 h-20 my-4 rounded-full border-4 border-blue bg-primary object-cover mx-auto"
+            src={image}
+            alt={fullName}
+          />
+          <p
+            className={`${
+              isDarkMode ? "text-grayLight" : "text-grayDarker"
+            } text-xs mt-2`}
+          >
+            {error}
+          </p>
+          <label className={`text-blue text-xs mt-2 cursor-pointer`}>
+            Choose a different photo
+            <input
+              type="file"
+              className="hidden"
+              onChange={handleChangeAvatar}
+            />
+          </label>
+          <Button text="Next" className="mx-auto mt-4" onClick={handleSubmit} />
+        </Card>
+      </div>
     </>
   );
 };

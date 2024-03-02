@@ -21,7 +21,11 @@ const Activate = () => {
     setStep((prevStep) => Math.max(prevStep - 1, 1));
   };
 
-  return <Step onNext={onNext} onBack={onBack} navigate={navigate} />;
+  return (
+    <>
+      <Step onNext={onNext} onBack={onBack} navigate={navigate} />;
+    </>
+  );
 };
 
 export default Activate;
