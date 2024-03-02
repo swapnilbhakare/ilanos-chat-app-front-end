@@ -35,7 +35,7 @@ const StepName = ({ onNext, onBack }) => {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center h-full md:justify-start sm:justify-start">
+      <div className="flex flex-col items-center justify-start h-full md:justify-center sm:justify-center">
         <Card
           title="What’s your full name?"
           className="my-8 md:my-32 w-full max-w-md px-12"
